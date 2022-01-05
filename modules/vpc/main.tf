@@ -35,6 +35,7 @@ resource "aws_subnet" "private_subnet" {
   count             = length(var.private_subnet_cidr)
   cidr_block        = var.private_subnet_cidr[count.index]
   availability_zone = var.azs[count.index]
+  
   tags = merge(
     var.tags,
     {
