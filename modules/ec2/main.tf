@@ -1,59 +1,71 @@
-#---------------------------------------
-# CREATE A SECURITY GROUP FOR WEBSERVER|
-#---------------------------------------
+#------------------------------
+# Security Group for WebServer|
+#------------------------------
 resource "aws_security_group" "webserver_sg" {
   name        = var.security_group_name
   description = var.sg_description
   vpc_id      = var.vpc_id
 
-  dynamic "ingress" {
-    for_each = var.instance_ingress_ports
-    iterator = port
-    content {
-      from_port        = port.value
-      to_port          = port.value
-      protocol         = "tcp"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-  }
   ingress {
-    description = "Allow SSH traffic"
-    from_port   = 22
-    to_port     = 22
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = var.instance_ssh_cidr
+    security_groups = var.alb_sg_id
   }
+
   egress {
     description      = "Allow all outbount traffic"
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
   }
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.tag_prefix}InstanceSecurityGroup"
+    },
+  )
 }
 
-#----------------------------------------
-# CREATE TWO EC2 INSTANCES FOR WEBSERVER|
-#----------------------------------------
-locals {
-  subnets = var.subnets_ids
-  length  = length(local.subnets)
-  launch_subnets = [
-    for i in range(var.instance_count) :
-    local.subnets[i % local.length]
-  ]
+#---------------------
+# Auto Scaling Group |
+#---------------------
+resource "aws_autoscaling_group" "asg" {
+  name                      = var.autoscaling_group_name
+  max_size                  = var.max_size
+  min_size                  = var.min_size
+  health_check_grace_period = 300
+  health_check_type         = var.health_check_type
+  desired_capacity          = var.desire_size
+  target_group_arns         = var.target_group_arn
+  launch_configuration      = aws_launch_configuration.launch_config.name
+  vpc_zone_identifier       = var.subnets_ids
+  tag {
+    key = "Name"
+    value = "${var.tag_prefix}AutoScalingGroup"
+    propagate_at_launch = true
+
+
+  }
+  dynamic "tag" {
+    for_each = var.tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
 }
-resource "aws_instance" "web_server" {
-  count                       = var.instance_count
-  subnet_id                   = local.launch_subnets[count.index]
-  ami                         = var.ami_id
-  instance_type               = var.instance_type
-  key_name                    = var.key_name
-  vpc_security_group_ids      = [aws_security_group.webserver_sg.id]
-  associate_public_ip_address = var.associate_public_ip_address
-  user_data                   = var.user_data
-  tags                        = var.tags
+
+#-----------------------
+# Launch Configuration |
+#-----------------------
+resource "aws_launch_configuration" "launch_config" {
+  name = var.launch_config_name
+  image_id                             = var.ami_id
+  instance_type                        = var.instance_type
+  key_name                             = var.key_name
+  user_data                            = var.user_data
+  security_groups                      = [aws_security_group.webserver_sg.id]
 }

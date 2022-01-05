@@ -24,6 +24,6 @@ output "igw_id" {
   description = "id of internet gateway"
 }
 output "nat_id" {
-  value       = aws_nat_gateway.my_nat.id
+  value       = aws_nat_gateway.my_nat.*.id
   description = "id of nat gateway."
 }

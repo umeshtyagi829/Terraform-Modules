@@ -1,7 +1,34 @@
-variable "subnets_ids" {
-  type        = list(string)
-  description = "subnet ids in which instances are to be launched."
+#-----------------
+# Security Group |
+#-----------------
+variable "security_group_name" {
+  type        = string
+  description = "Name of security group for EC2 istance."
+  default     = "security-group-tf"
 }
+
+variable "sg_description" {
+  default = "security group for instance"
+  type    = string
+}
+variable "vpc_id" {
+  type        = string
+  description = "VPC id of security group"
+}
+
+# variable "instance_ssh_cidr" {
+#   type = list(string)
+# }
+
+
+
+variable "alb_sg_id" {
+  type = list(string)
+}
+
+#------------------
+# Launch Template |
+#------------------
 variable "instance_type" {
   description = "Intance type to run"
   type        = string
@@ -26,44 +53,61 @@ variable "tags" {
 
 }
 
-variable "associate_public_ip_address" {
-  description = "Assign public IP address to instances"
-  type        = bool
-  default     = true
-}
-
-variable "instance_count" {
-  description = "Number of instance to launch."
-  type        = number
-  default     = 1
-}
-
 variable "ami_id" {
   type        = string
   description = "AMI id for the instance."
 }
 
-variable "security_group_name" {
-  type        = string
-  description = "Name of security group for EC2 istance."
-  default     = "security-group-tf"
-}
-
-variable "sg_description" {
-  default = "security group for instance"
+variable "launch_config_name" {
   type    = string
-}
-variable "vpc_id" {
-  type        = string
-  description = "VPC id of security group"
+  default = "aws-cf"
 }
 
-variable "instance_ssh_cidr" {
-  type = list(string)
+variable "volume_size" {
+  type    = number
+  default = 10
 }
 
-variable "instance_ingress_ports" {
-  description = "ingress ports"
+
+#---------------------
+# Auto Scaling Group |
+#---------------------
+variable "target_group_arn" {
+  description = "target group arn"
   type        = list(string)
-  default     = []
+}
+
+variable "autoscaling_group_name" {
+  type        = string
+  default     = "aws-asg"
+  description = "Auto Scaling Group Name"
+}
+
+variable "max_size" {
+  type = string
+}
+
+variable "min_size" {
+  type = string
+}
+
+variable "desire_size" {
+  type = string
+}
+
+variable "health_check_type" {
+  type    = string
+  default = "EC2"
+}
+
+variable "subnets_ids" {
+  type        = list(string)
+  description = "subnet ids in which instances are to be launched."
+}
+
+variable "tag_prefix" {
+  type = string
+  default = ""
+  description = "tag prefix"
+
 }

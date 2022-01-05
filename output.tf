@@ -1,8 +1,8 @@
-# webserver public ips
-output "instance_public_ips" {
-  value = module.ec2.webserver_ips
+# # webserver public ips
+# output "instance_public_ips" {
+#   value = module.ec2.webserver_ips
 
-}
+# }
 # publict subnet ids
 output "public_subnet_ids" {
   value = module.vpc.public_subnet_ids

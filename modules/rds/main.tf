@@ -4,7 +4,12 @@
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = var.subnet_group_name
   subnet_ids = var.subnet_ids
-  tags       = var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.tag_prefix}DBSubnetGroup"
+    },
+  )
 }
 #--------------
 # RDS INSTANCE|
@@ -22,8 +27,12 @@ resource "aws_db_instance" "my_rds" {
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   skip_final_snapshot    = true
-
-  tags = var.tags
+  tags = merge(
+      var.tags,
+      {
+        Name = "${var.tag_prefix}RDSInstance"
+      },
+    )
 }
 
 #-----------------------------
@@ -36,14 +45,19 @@ resource "aws_security_group" "db_sg" {
     from_port   = var.from_port
     to_port     = var.to_port
     protocol    = var.protocol
-    cidr_blocks = var.allowed_cidrs
+    security_groups = var.webserver_sg_id
   }
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"] 
+
   }
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.tag_prefix}DBSecurityGroup"
+    },
+  )
 }

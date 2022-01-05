@@ -1,3 +1,12 @@
+# variable "owner" {
+#   type = string
+# }
+
+# variable "environment" {
+#    type = string  
+# }
+
+
 #-------------------
 # VARIABLES FOR VPC|
 #-------------------
@@ -34,7 +43,7 @@ variable "instance_type" {
 variable "key_name" {
   type        = string
   description = "key name"
-  default     = "UmeshKey"
+  default     = "umesh-ohio-key"
 
 }
 
@@ -55,12 +64,12 @@ variable "ssh_client" {
 variable "alb_name" {
   description = "application load balancer name"
   type        = string
-  default     = "umesh-alb"
+  default     = "myalb"
 }
 variable "target_group_name" {
   description = "application load balancer target group name"
   type        = string
-  default     = "umesh-tg"
+  default     = "mytg"
 }
 #-------------------
 # VARIABLES FOR RDS|
@@ -68,31 +77,31 @@ variable "target_group_name" {
 variable "rds_instance_name" {
   description = "rds instance name"
   type        = string
-  default     = "umesh-rds"
+  default     = "rdsinstance"
 }
 
 variable "subnet_group_name" {
   description = "database subnet group name"
   type        = string
-  default     = "umesh-db-sg"
+  default     = "db-sg"
 }
 
 variable "security_group_name" {
   description = "database security group name"
   type        = string
-  default     = "umesh-rds-subnet-group"
+  default     = "rds-subnet-group"
 }
 
 variable "db_name" {
   description = "Database name"
   type        = string
-  default     = "todo"
+  default     = "testdb"
 }
 variable "db_username" {
   description = "Database username"
   type        = string
 }
-variable "db_pass" {
+variable "db_password" {
   description = "Database password"
   type        = string
 }

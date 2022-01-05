@@ -8,7 +8,12 @@ resource "aws_lb" "my_alb" {
   security_groups            = [aws_security_group.alb_sg.id]
   subnets                    = var.subnets_ids
   enable_deletion_protection = false
-  tags                       = var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.tag_prefix}ALB"
+    },
+  )
 }
 #---------------
 # TARGET GROUP |
@@ -18,16 +23,19 @@ resource "aws_lb_target_group" "my_tg" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
+
+  health_check {
+    path                = "/index.html"
+    port                = 80
+    healthy_threshold   = 3
+    unhealthy_threshold = 2
+    timeout             = 10
+    interval            = 30
+    matcher             = "200" # has to be HTTP 200 or fails
+  }
+
 }
-#-----------------------------------
-# ATACH INSTANCES WITH TARGET GROUP|
-#-----------------------------------
-resource "aws_lb_target_group_attachment" "attach_tg" {
-  count            = var.target_instance_count
-  target_group_arn = aws_lb_target_group.my_tg.arn
-  target_id        = var.target_ids[count.index]
-  port             = 80
-}
+
 #--------------
 # ALB LISTNER |
 #--------------
@@ -66,18 +74,27 @@ resource "aws_alb_listener_rule" "alb_listener_rule" {
 resource "aws_security_group" "alb_sg" {
   name   = var.security_group_name
   vpc_id = var.vpc_id
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+
+  dynamic "ingress" {
+    for_each = var.ingress_ports
+    iterator = port
+    content {
+      from_port       = port.value
+      to_port         = port.value
+      protocol        = "tcp"
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
   }
   egress {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
   }
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.tag_prefix}ALBSecurityGroup"
+    },
+  )
 }

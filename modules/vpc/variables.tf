@@ -26,3 +26,10 @@ variable "tags" {
     ManagedBy = "Terraform"
   }
 }
+
+variable "tag_prefix" {
+  type = string
+  default = ""
+  description = "tag prefix"
+
+}

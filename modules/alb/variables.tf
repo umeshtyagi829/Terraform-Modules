@@ -16,21 +16,17 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "target_instance_count" {
-  description = "Count of targets for attachment."
-  type        = number
-}
-variable "target_ids" {
-  description = "IDs of targets for attachment."
-  type        = list(string)
-}
-
 variable "security_group_name" {
   type        = string
   description = "ALB SG name."
   default     = "alb-security-group"
 }
 
+variable "ingress_ports" {
+  description = "ingress ports"
+  type        = list(string)
+  default     = []
+}
 
 variable "tags" {
   description = "Tag for the resources."
@@ -38,4 +34,11 @@ variable "tags" {
   default = {
     ManagedBy = "Terraform"
   }
+}
+
+variable "tag_prefix" {
+  type = string
+  default = ""
+  description = "tag prefix"
+
 }

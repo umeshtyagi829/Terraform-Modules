@@ -1,4 +1,6 @@
-##############  RDS subnet group #############
+#-------------------
+# RDS Subnet Group |
+#-------------------
 variable "subnet_group_name" {
   description = "Name of RDS subnet group."
   type        = string
@@ -10,7 +12,9 @@ variable "subnet_ids" {
   description = "List of subnet ids for RDS subnet group."
 }
 
-############## RDS instance ####################
+#--------------
+# RDS Instance|
+#--------------
 variable "identifier" {
   type        = string
   description = "Identifier for RDS."
@@ -57,7 +61,9 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
-############## RDS SG ####################
+#-------------------
+# RDS Security Group |
+#-------------------
 variable "security_group_name" {
   description = "Security group name for RDS."
   type        = string
@@ -87,6 +93,10 @@ variable "protocol" {
   description = "protocol"
   default     = "tcp"
 }
+
+variable "webserver_sg_id" {
+  type = list(string)
+}
 ########################## Tags ###########################
 variable "tags" {
   description = "Tag for the resources."
@@ -94,4 +104,11 @@ variable "tags" {
   default = {
     ManagedBy = "Terraform"
   }
+}
+
+variable "tag_prefix" {
+  type = string
+  default = ""
+  description = "tag prefix"
+
 }
