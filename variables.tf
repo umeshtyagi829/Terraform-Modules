@@ -1,12 +1,3 @@
-# variable "owner" {
-#   type = string
-# }
-
-# variable "environment" {
-#    type = string  
-# }
-
-
 #-------------------
 # VARIABLES FOR VPC|
 #-------------------
@@ -104,4 +95,9 @@ variable "db_username" {
 variable "db_password" {
   description = "Database password"
   type        = string
+}
+
+# aws credentials
+variable "region" {
+  type = string
 }

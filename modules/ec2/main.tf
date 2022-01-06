@@ -46,7 +46,6 @@ resource "aws_autoscaling_group" "asg" {
     value = "${var.tag_prefix}AutoScalingGroup"
     propagate_at_launch = true
 
-
   }
   dynamic "tag" {
     for_each = var.tags

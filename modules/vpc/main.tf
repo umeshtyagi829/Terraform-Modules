@@ -67,6 +67,12 @@ resource "aws_subnet" "public_subnet" {
 resource "aws_eip" "nat_eip" {
   count = length(var.azs)
   vpc   = true
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.tag_prefix}eip-${count.index}"
+    },
+  )
 }
 
 resource "aws_nat_gateway" "my_nat" {

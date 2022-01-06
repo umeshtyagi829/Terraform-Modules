@@ -25,7 +25,7 @@ resource "aws_lb_target_group" "my_tg" {
   vpc_id   = var.vpc_id
 
   health_check {
-    path                = "/index.html"
+    path                = "/index.php"
     port                = 80
     healthy_threshold   = 3
     unhealthy_threshold = 2
