@@ -2,28 +2,29 @@
 # VARIABLES FOR VPC|
 #-------------------
 variable "vpc_cidr" {
-  description = "custom vpc"
+  type = string
+  description = "A CIDR block range for VPC."
 }
 
 variable "azs" {
-  description = "availability zones for subnets"
+  description = "A list of availability zones"
   type        = list(string)
 
 }
 
 variable "private_subnet_cidr" {
-  description = "private subnet cidr"
+  description = "A list private subnets cidr"
   type        = list(any)
 }
 
 variable "public_subnet_cidr" {
-  description = "public subnet cidr"
+  description = "A list public subnets cidr"
   type        = list(any)
 }
 
 variable "tag_prefix" {
   type        = string
-  description = "tag prefix"
+  description = "Value for tag prefix. This value adds in each resources name tag."
 
 }
 
@@ -32,35 +33,42 @@ variable "tag_prefix" {
 #-------------------------
 variable "instance_type" {
   type        = string
-  description = "instance type"
+  default     = "t2.micro"
+  description = "Assign instance type"
 }
 
 variable "key_name" {
   type        = string
-  description = "key name"
+  description = "Assign key name. It helps to SSH to the instances"
 }
 
 # alb security group ingress port
 variable "ingress_ports" {
   type = list(string)
+  description = "A list of ports. It uses by security group for traffic"
 }
 
 variable "max_size" {
   type = string
+  description = "asg maximum number of instances limit"
+
 }
 
 variable "min_size" {
   type = string
+  description = "ASG manimum number of instances limit"
 }
 variable "desire_size" {
   type = string
+  description = "ASG number of instances limit which will be running"
 }
 variable "launch_config_name" {
   type = string
+  description = "choose launch configuration name"
 }
 variable "health_check_grace_period" {
   type = string
-  description = "health_check_grace_period value"
+  description = "choose health_check_grace_period value"
 }
 #-------------------
 # VARIABLES FOR ALB|
