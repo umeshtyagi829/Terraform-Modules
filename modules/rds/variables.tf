@@ -61,6 +61,13 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "multi_az" {
+  type        = bool
+  default     = false
+  description = "do you want to launch multi_az"
+
+}
 #-------------------
 # RDS Security Group |
 #-------------------
@@ -98,17 +105,9 @@ variable "webserver_sg_id" {
   type = list(string)
 }
 ########################## Tags ###########################
-variable "tags" {
-  description = "Tag for the resources."
-  type        = map(any)
-  default = {
-    ManagedBy = "Terraform"
-  }
-}
-
 variable "tag_prefix" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "tag prefix"
 
 }

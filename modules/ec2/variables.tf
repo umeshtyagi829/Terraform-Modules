@@ -16,12 +16,6 @@ variable "vpc_id" {
   description = "VPC id of security group"
 }
 
-# variable "instance_ssh_cidr" {
-#   type = list(string)
-# }
-
-
-
 variable "alb_sg_id" {
   type = list(string)
 }
@@ -44,15 +38,6 @@ variable "user_data" {
   default     = ""
 }
 
-variable "tags" {
-  type = map(any)
-  default = {
-    "ManagedBy" = "Terraform"
-    "Cloud"     = "AWS"
-  }
-
-}
-
 variable "ami_id" {
   type        = string
   description = "AMI id for the instance."
@@ -67,7 +52,6 @@ variable "volume_size" {
   type    = number
   default = 10
 }
-
 
 #---------------------
 # Auto Scaling Group |
@@ -100,14 +84,19 @@ variable "health_check_type" {
   default = "EC2"
 }
 
+variable "health_check_grace_period" {
+  type = string
+  description = "health_check_grace_period value"
+  default = "300"
+}
 variable "subnets_ids" {
   type        = list(string)
   description = "subnet ids in which instances are to be launched."
 }
 
 variable "tag_prefix" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "tag prefix"
 
 }

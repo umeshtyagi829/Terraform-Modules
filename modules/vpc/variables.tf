@@ -18,18 +18,9 @@ variable "public_subnet_cidr" {
   type        = list(string)
 }
 
-variable "tags" {
-  description = "Tag for the resources."
-  type        = map(any)
-  default = {
-    Cloud     = "AWS"
-    ManagedBy = "Terraform"
-  }
-}
-
 variable "tag_prefix" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "tag prefix"
 
 }

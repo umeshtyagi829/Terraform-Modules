@@ -21,72 +21,136 @@ variable "public_subnet_cidr" {
   type        = list(any)
 }
 
+variable "tag_prefix" {
+  type        = string
+  description = "tag prefix"
+
+}
+
 #-------------------------
 # VARIABLES FOR INSTACNES|
 #-------------------------
 variable "instance_type" {
   type        = string
-  default     = "t2.micro"
   description = "instance type"
-
 }
 
 variable "key_name" {
   type        = string
   description = "key name"
-  default     = "umesh-ohio-key"
-
 }
 
-# webserver security group port
-variable "sg_ports" {
-  type    = list(string)
-  default = ["80"]
-
+# alb security group ingress port
+variable "ingress_ports" {
+  type = list(string)
 }
 
-variable "ssh_client" {
+variable "max_size" {
   type = string
 }
 
+variable "min_size" {
+  type = string
+}
+variable "desire_size" {
+  type = string
+}
+variable "launch_config_name" {
+  type = string
+}
+variable "health_check_grace_period" {
+  type = string
+  description = "health_check_grace_period value"
+}
 #-------------------
 # VARIABLES FOR ALB|
 #-------------------
 variable "alb_name" {
   description = "application load balancer name"
   type        = string
-  default     = "myalb"
 }
+
+variable "load_balancer_type" {
+  type        = string
+  description = "choose load_balancer_type"
+}
+
+variable "internal" {
+  type = bool
+}
+
+variable "enable_deletion_protection" {
+  type = bool
+}
+
 variable "target_group_name" {
   description = "application load balancer target group name"
   type        = string
-  default     = "mytg"
 }
+
+variable "target_group_port" {
+  type = string
+}
+
+variable "target_group_protocol" {
+  type = string
+}
+
+variable "heath_check_path" {
+  type = string
+}
+
+variable "heath_check_port" {
+  type = string
+}
+
+variable "heath_check_healthy_threshold" {
+  type = string
+}
+
+variable "heath_check_unhealthy_threshold" {
+  type = string
+}
+
+variable "heath_check_timeout" {
+  type = string
+}
+variable "heath_check_interval" {
+  type = string
+}
+variable "heath_check_matcher" {
+  type = string
+}
+
 #-------------------
 # VARIABLES FOR RDS|
 #-------------------
 variable "rds_instance_name" {
   description = "rds instance name"
   type        = string
-  default     = "rdsinstance"
 }
 
 variable "subnet_group_name" {
   description = "database subnet group name"
   type        = string
-  default     = "db-sg"
 }
 
 variable "security_group_name" {
   description = "database security group name"
   type        = string
-  default     = "rds-subnet-group"
+}
+
+variable "cidr_blocks" {
+  type = list(string)
+}
+
+variable "protocol" {
+  type = string
 }
 
 variable "db_name" {
   description = "Database name"
   type        = string
-  default     = "testdb"
 }
 variable "db_username" {
   description = "Database username"
@@ -97,6 +161,14 @@ variable "db_password" {
   type        = string
 }
 
+variable "multi_az" {
+  type        = bool
+  description = "multi_az"
+}
+
+variable "db_instance_class" {
+  type = string
+}
 # aws credentials
 variable "region" {
   type = string
