@@ -100,3 +100,9 @@ variable "tag_prefix" {
   description = "tag prefix"
 
 }
+
+variable "default_tags" {
+    description = "Default Tags for Auto Scaling Group"
+    type        = map(string)
+    default     = {}
+}

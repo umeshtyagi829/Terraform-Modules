@@ -27,6 +27,7 @@ module "ec2" {
   health_check_grace_period = var.health_check_grace_period
   launch_config_name = var.launch_config_name
   alb_sg_id          = [module.alb.alb_sg_id]
+  default_tags       = var.default_tags
   tag_prefix         = var.tag_prefix
   user_data          = <<EOF
                         #! /bin/bash
@@ -35,8 +36,13 @@ module "ec2" {
                         sudo yum install -y httpd mariadb-server git
                         sudo systemctl start httpd
                         sudo systemctl enable httpd
-                        git clone https://github.com/umeshtyagi829/php-mysql-connection.git /tmp/php
-                        sudo mv /tmp/php/index.php /var/www/html/
+                        sudo echo SetEnv DB_HOST ${module.rds.rds_endpoint} >> /tmp/env.conf
+                        sudo echo SetEnv MYSQL_DATABASE ${var.db_name} >> /tmp/env.conf
+                        sudo echo SetEnv MYSQL_USER ${var.db_username} >> /tmp/env.conf
+                        sudo echo SetEnv MYSQL_PASSWORD ${var.db_password} >> /tmp/env.conf
+                        sudo mv /tmp/env.conf /etc/httpd/conf.d/env.conf
+                        git clone https://github.com/umeshtyagi829/deploy_two_tier_app_in_container.git /tmp/code
+                        sudo mv /tmp/code/php/code/*  /var/www/html
                         sudo systemctl restart httpd
                         EOF
 }

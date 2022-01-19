@@ -7,6 +7,14 @@ resource "aws_security_group" "webserver_sg" {
   vpc_id      = var.vpc_id
 
   ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+
+  ingress {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
@@ -38,12 +46,35 @@ resource "aws_autoscaling_group" "asg" {
   target_group_arns         = var.target_group_arn
   launch_configuration      = aws_launch_configuration.launch_config.name
   vpc_zone_identifier       = var.subnets_ids
+  
   tag {
-    key                 = "Name"
-    value               = "${var.tag_prefix}AutoScalingGroup"
+    key = "Name"
+    value = "${var.tag_prefix}AutoScalingGroup"
     propagate_at_launch = true
 
   }
+  dynamic "tag" {
+    for_each = var.default_tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+
+  # tags = merge(
+  #   var.default_tags,
+  #   {
+  #    Name = "AutoScalingGroup"
+  #   },
+  # )
+
+  # tag {
+  #   key                 = "Name"
+  #   value               = "${var.tag_prefix}AutoScalingGroup"
+  #   propagate_at_launch = true
+  # }
+
 }
 
 #-----------------------

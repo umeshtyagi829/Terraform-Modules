@@ -1,3 +1,20 @@
+# aws credentials
+variable "region" {
+  type = string
+}
+
+variable "tag_prefix" {
+  type        = string
+  description = "Value for tag prefix. This value adds in each resources name tag."
+
+}
+
+variable "default_tags" {
+  description = "Default Tags for all resources"
+  type        = map(string)
+}
+
+
 #-------------------
 # VARIABLES FOR VPC|
 #-------------------
@@ -20,12 +37,6 @@ variable "private_subnet_cidr" {
 variable "public_subnet_cidr" {
   description = "A list public subnets cidr"
   type        = list(any)
-}
-
-variable "tag_prefix" {
-  type        = string
-  description = "Value for tag prefix. This value adds in each resources name tag."
-
 }
 
 #-------------------------
@@ -177,7 +188,5 @@ variable "multi_az" {
 variable "db_instance_class" {
   type = string
 }
-# aws credentials
-variable "region" {
-  type = string
-}
+
+
